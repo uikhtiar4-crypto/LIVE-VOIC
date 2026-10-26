@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#10131b">
+<title>Live Vouce Fauzstudio — Pembaca Komentar</title>
+<style>
+:root{color-scheme:dark;--bg:#0b0e14;--panel:#141a24;--panel2:#1b2330;--line:#2a3445;--text:#f3f6fb;--muted:#9ca9bc;--accent:#22d3a6;--pink:#ff477e;--warn:#f8c45c}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(900px 500px at 10% -10%,#173c3b 0%,transparent 55%),var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:760px;margin:auto;padding:22px 15px 40px}.brand{display:flex;align-items:center;gap:12px;margin-bottom:22px}.logo{width:45px;height:45px;border-radius:14px;background:linear-gradient(135deg,var(--accent),#4d83ff);display:grid;place-items:center;color:#071512;font-weight:900;font-size:20px}.brand h1{font-size:20px;margin:0}.brand p{margin:3px 0 0;color:var(--muted);font-size:12px}
+.card{background:linear-gradient(160deg,#171e29,#111720);border:1px solid var(--line);border-radius:18px;padding:17px;margin:13px 0;box-shadow:0 12px 35px #0002}.top{display:flex;justify-content:space-between;gap:10px;align-items:center}.eyebrow{font-size:11px;letter-spacing:1.3px;color:var(--muted);font-weight:800}.status{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:6px 10px;font-size:12px;color:var(--warn)}.dot{width:7px;height:7px;border-radius:50%;background:currentColor}
+h2{font-size:17px;margin:7px 0 13px}label{display:block;color:#c6d0de;font-size:13px;margin:12px 0 7px}input,textarea,select{width:100%;border:1px solid #344155;background:#0d121a;color:var(--text);border-radius:11px;padding:12px;font:inherit;outline:none}input:focus,textarea:focus{border-color:var(--accent)}.row{display:flex;gap:9px}.row>*{flex:1;min-width:0}button{border:0;border-radius:11px;padding:12px 14px;font:700 14px system-ui;cursor:pointer}.primary{background:var(--accent);color:#061712}.secondary{background:#263246;color:var(--text);border:1px solid #39475e}.danger{background:#402031;color:#ffb8cb;border:1px solid #6b2d47}.full{width:100%;margin-top:12px}.hint{font-size:12px;color:var(--muted);margin:10px 0 0}.warning{border:1px solid #64502b;background:#2a2417;color:#f9df9c;padding:12px;border-radius:12px;font-size:12px;margin-top:12px}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}.metric{background:#0e141d;border:1px solid var(--line);border-radius:12px;padding:12px}.metric strong{display:block;font-size:22px}.metric span{font-size:11px;color:var(--muted)}
+.toggleline{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}.toggleline:last-child{border-bottom:0}.toggleline small{display:block;color:var(--muted);font-size:12px}.switch{width:46px;height:26px;position:relative;flex:none}.switch input{opacity:0;width:0;height:0}.slider{position:absolute;inset:0;border-radius:99px;background:#394355;transition:.2s}.slider:before{content:"";position:absolute;width:18px;height:18px;left:4px;top:4px;background:#fff;border-radius:50%;transition:.2s}.switch input:checked+.slider{background:var(--accent)}.switch input:checked+.slider:before{transform:translateX(20px);background:#062018}
+.comments{display:flex;flex-direction:column;gap:9px;max-height:310px;overflow:auto;margin-top:12px}.comment{background:#0e141d;border:1px solid var(--line);border-radius:12px;padding:11px 12px}.commenthead{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--muted);margin-bottom:4px}.comment p{margin:0;overflow-wrap:anywhere}.empty{text-align:center;padding:27px 10px;color:var(--muted);font-size:13px}.foot{text-align:center;color:#78869a;font-size:11px;margin-top:20px}
+@media(min-width:600px){main{padding-top:32px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}.grid .card{margin:0}.card{padding:20px}}
+</style>
+</head>
+<body>
+<main>
+  <header class="brand">
+    <div class="logo">LV</div>
+    <div><h1>Live Vouce Fauzstudio</h1><p>Pembaca komentar TikTok LIVE · Prototipe gratis</p></div>
+  </header>
+
+  <section class="card">
+    <div class="top"><span class="eyebrow">KONEKSI LIVE</span><span class="status" id="status"><i class="dot"></i><span>Belum terhubung</span></span></div>
+    <h2>Hubungkan LIVE kamu</h2>
+    <label for="username">Username TikTok (tanpa @)</label>
+    <input id="username" placeholder="contoh: nam akun kamu" autocomplete="off" autocapitalize="none">
+    <button class="primary full" id="connectBtn">Cek & mulai koneksi</button>
+    <p class="hint">Versi ini belum mengambil komentar TikTok secara langsung. Tombol koneksi hanya menjalankan pemeriksaan dasar di halaman ini.</p>
+    <div class="warning">Agar komentar sungguhan bisa masuk, diperlukan penghubung komentar yang berjalan terus di server. Jangan masukkan kata sandi TikTok atau kode OTP di halaman ini.</div>
+    <div class="metrics">
+      <div class="metric"><strong id="total">0</strong><span>Komentar diterima</span></div>
+      <div class="metric"><strong id="queue">0</strong><span>Antrean suara</span></div>
+      <div class="metric"><strong id="spoken">0</strong><span>Dibacakan</span></div>
+    </div>
+  </section>
+
+  <div class="grid">
+    <section class="card">
+      <div class="eyebrow">PENGATURAN SUARA</div>
+      <h2>Suara pembaca</h2>
+      <div class="toggleline"><div><b>Suara otomatis</b><small>Baca komentar yang ditambahkan di demo</small></div><label class="switch"><input type="checkbox" id="voiceToggle" checked><span class="slider"></span></label></div>
+      <label for="voiceSelect">Pilihan suara perangkat</label>
+      <select id="voiceSelect"><option value="">Suara default perangkat</option></select>
+      <label for="rate">Kecepatan suara: <span id="rateValue">1.0×</span></label>
+      <input id="rate" type="range" min="0.7" max="1.3" step="0.1" value="1">
+      <button class="secondary full" id="testVoice">Tes suara Indonesia</button>
+      <p class="hint">Suara tersedia bergantung pada browser dan bahasa yang terpasang di HP.</p>
+    </section>
+
+    <section class="card">
+      <div class="eyebrow">UJI COBA TAMPILAN</div>
+      <h2>Simulasikan komentar</h2>
+      <label for="demoName">Nama penonton</label>
+      <input id="demoName" value="PenontonDemo" maxlength="40">
+      <label for="demoText">Isi komentar</label>
+      <textarea id="demoText" rows="3" maxlength="300" placeholder="Tulis komentar untuk tes suara...">Halo kak, salam dari Lampung!</textarea>
+      <button class="primary full" id="addDemo">Tambahkan komentar demo</button>
+      <p class="hint">Ini hanya simulasi untuk mengetes suara dan antrean, bukan komentar LIVE asli.</p>
+    </section>
+  </div>
+
+  <section class="card">
+    <div class="top"><div><div class="eyebrow">KOMENTAR TERBARU</div><h2 style="margin-bottom:0">Live chat</h2></div><button class="secondary" id="clearBtn">Bersihkan</button></div>
+    <div class="comments" id="comments"><div class="empty" id="empty">Belum ada komentar.<br>Tambahkan komentar demo untuk mengetes pembaca suara.</div></div>
+  </section>
+  <p class="foot">Live Vouce Fauzstudio · Prototipe lokal · Tidak terhubung ke akun TikTok</p>
+</main>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  let total = 0, spoken = 0, queueCount = 0, queue = [], speaking = false;
+  const comments = $('comments');
+  const status = (message, color) => {
+    $('status').lastElementChild.textContent = message;
+    $('status').style.color = color || 'var(--warn)';
+  };
+  function updateMetrics(){
+    $('total').textContent = total;
+    $('spoken').textContent = spoken;
+    $('queue').textContent = queue.length + (speaking ? 1 : 0);
+  }
+  function loadVoices(){
+    const select = $('voiceSelect');
+    const old = select.value;
+    const voices = speechSynthesis.getVoices();
+    select.innerHTML = '<option value="">Suara default perangkat</option>';
+    voices.forEach((v,i) => {
+      const option = document.createElement('option');
+      option.value = String(i);
+      option.textContent = `${v.name} (${v.lang})`;
+      select.appendChild(option);
+    });
+    const idVoice = voices.findIndex(v => v.lang.toLowerCase().startsWith('id'));
+    if (old) select.value = old;
+    else if (idVoice >= 0) select.value = String(idVoice);
+  }
+  function speakNext(){
+    if(speaking || !queue.length) { updateMetrics(); return; }
+    const item = queue.shift();
+    speaking = true; updateMetrics();
+    if(!('speechSynthesis' in window)){
+      speaking = false; status('Browser tidak mendukung suara','var(--pink)'); updateMetrics(); return;
+    }
+    const utter = new SpeechSynthesisUtterance(item.text);
+    utter.lang = 'id-ID';
+    utter.rate = Number($('rate').value);
+    const voices = speechSynthesis.getVoices();
+    const selected = $('voiceSelect').value;
+    if(selected !== '' && voices[Number(selected)]) utter.voice = voices[Number(selected)];
+    utter.onend = () => { speaking = false; spoken++; updateMetrics(); speakNext(); };
+    utter.onerror = () => { speaking = false; updateMetrics(); speakNext(); };
+    speechSynthesis.speak(utter);
+  }
+  function addComment(name, text){
+    const cleanText = text.trim();
+    if(!cleanText) return;
+    const empty = $('empty'); if(empty) empty.remove();
+    const item = document.createElement('div'); item.className = 'comment';
+    const head = document.createElement('div'); head.className = 'commenthead';
+    const author = document.createElement('b'); author.textContent = name.trim() || 'Penonton';
+    const time = document.createElement('span'); time.textContent = new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
+    const body = document.createElement('p'); body.textContent = cleanText;
+    head.append(author,time); item.append(head,body); comments.prepend(item);
+    while(comments.children.length > 60) comments.lastElementChild.remove();
+    total++;
+    if($('voiceToggle').checked){ queue.push({text:cleanText}); speakNext(); }
+    updateMetrics();
+  }
+  $('connectBtn').addEventListener('click', () => {
+    const username = $('username').value.trim().replace(/^@/,'');
+    if(!username){ status('Masukkan username dahulu','var(--pink)'); $('username').focus(); return; }
+    status('Belum ada konektor LIVE','var(--warn)');
+    alert('Username tersimpan untuk prototipe ini: @'+username+'\\n\\nDashboard belum tersambung ke komentar TikTok LIVE asli. Diperlukan layanan konektor terpisah.');
+  });
+  $('addDemo').addEventListener('click', () => {
+    addComment($('demoName').value, $('demoText').value);
+  });
+  $('testVoice').addEventListener('click', () => {
+    if(!('speechSynthesis' in window)){ alert('Browser ini tidak mendukung fitur suara. Coba browser lain.'); return; }
+    speechSynthesis.cancel(); queue=[]; speaking=false; updateMetrics();
+    addComment('Tes Sistem','Tes suara bahasa Indonesia. Pembaca komentar siap diuji.');
+  });
+  $('clearBtn').addEventListener('click', () => {
+    comments.innerHTML = '<div class="empty" id="empty">Belum ada komentar.<br>Tambahkan komentar demo untuk mengetes pembaca suara.</div>';
+    total=0; spoken=0; queue=[]; speechSynthesis.cancel(); speaking=false; updateMetrics();
+  });
+  $('voiceToggle').addEventListener('change', e => {
+    if(!e.target.checked){queue=[]; speechSynthesis.cancel(); speaking=false; updateMetrics();}
+  });
+  $('rate').addEventListener('input', e => $('rateValue').textContent = Number(e.target.value).toFixed(1)+'×');
+  if('speechSynthesis' in window){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+  updateMetrics();
+})();
+</script>
+</body>
+</html>
