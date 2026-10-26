@@ -1,0 +1,67 @@
+import express from "express";
+import { createServer } from "node:http";
+import { Server } from "socket.io";
+import {
+  TikTokLiveConnection,
+  WebcastEvent
+} from "tiktok-live-connector";
+
+const app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer);
+
+app.use(express.static("."));
+
+let liveConnection = null;
+
+io.on("connection", (socket) => {
+  socket.on("connect-live", async (username) => {
+    const name = String(username || "")
+      .trim()
+      .replace(/^@/, "");
+
+    if (!/^[a-zA-Z0-9._]{1,24}$/.test(name)) {
+      socket.emit("live-status", "Username tidak valid");
+      return;
+    }
+
+    try {
+      if (liveConnection) {
+        liveConnection.disconnect();
+      }
+
+      liveConnection =
+        new TikTokLiveConnection(name);
+
+      liveConnection.on(
+        WebcastEvent.CHAT,
+        (data) => {
+          io.emit("live-comment", {
+            username:
+              data.user?.uniqueId || "penonton",
+            comment: data.comment || ""
+          });
+        }
+      );
+
+      await liveConnection.connect();
+
+      socket.emit(
+        "live-status",
+        "Terhubung ke LIVE @" + name
+      );
+    } catch (error) {
+      socket.emit(
+        "live-status",
+        "Gagal terhubung. Pastikan akun sedang LIVE."
+      );
+      console.error(error.message);
+    }
+  });
+});
+
+const port = process.env.PORT || 3000;
+
+httpServer.listen(port, "0.0.0.0", () => {
+  console.log("Server berjalan di port " + port);
+});
